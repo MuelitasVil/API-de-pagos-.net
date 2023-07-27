@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "pJW+huJAAaN1KzdR8OuovjaqpMDmUDIBNvDdcXTJbeo=",
+  "Source": "API.PaymentTransactions.API",
+  "BasePath": "_content/API.PaymentTransactions.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
