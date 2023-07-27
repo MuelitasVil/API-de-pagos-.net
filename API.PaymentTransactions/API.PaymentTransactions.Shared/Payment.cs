@@ -8,6 +8,7 @@ namespace API.PaymentTransactions.Shared
 {
     public class Payment
     {
+        public long paymentId { get; set; }
         public String description { get; set; }
         public long mountId { get; set; }
         public long statusId { get; set; }

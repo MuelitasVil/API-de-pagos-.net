@@ -10,7 +10,7 @@ namespace API.PaymentTransactions.Shared
     public class Payer
     {
 
-        public long Document { get; set; }
+        public long PayerId { get; set; }
         public documentTypes documentType { get; set; }
         public string name { get; set; }
         public string number { get; set; }
