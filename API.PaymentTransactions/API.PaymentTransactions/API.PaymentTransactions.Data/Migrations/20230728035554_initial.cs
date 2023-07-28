@@ -19,7 +19,9 @@ namespace API.PaymentTransactions.Data.Migrations
                     Total = table.Column<long>(type: "bigint", nullable: false),
                     allowPartial = table.Column<bool>(type: "bit", nullable: false),
                     suscribe = table.Column<bool>(type: "bit", nullable: false),
-                    payerId = table.Column<long>(type: "bigint", nullable: false)
+                    payerId = table.Column<long>(type: "bigint", nullable: false),
+                    paid = table.Column<bool>(type : "bit", nullable : false)
+
                 },
                 constraints: table =>
                 {
@@ -63,12 +65,14 @@ namespace API.PaymentTransactions.Data.Migrations
                     toTotal = table.Column<long>(type: "bigint", nullable: false),
                     toCurrency = table.Column<int>(type: "int", nullable: false),
                     fromTotal = table.Column<long>(type: "bigint", nullable: false),
-                    fromCurrency = table.Column<int>(type: "int", nullable: false)
+                    fromCurrency = table.Column<int>(type: "int", nullable: false),
+                    countId = table.Column<long>(type : "bigint", nullable: false),
+                    factor = table.Column<int>(type : "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mounts", x => x.MountId);
-                });
+                }); ;
 
             migrationBuilder.CreateTable(
                 name: "Payers",

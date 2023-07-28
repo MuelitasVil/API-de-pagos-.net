@@ -9,3 +9,10 @@ END
 
 -- Crear la base de datos
 CREATE DATABASE PaymentDatabase;
+use PaymentDatabase;
+
+-- Revisar migraciones a la base de datos :
+-- SELECT * from dbo.__EFMigrationsHistory;
+
+-- Revisar procedimientos almacenados de la base de datos :
+-- SELECT name FROM sys.procedures;

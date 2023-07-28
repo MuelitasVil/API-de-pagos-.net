@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.PaymentTransactions.Data.Migrations
 {
     [DbContext(typeof(APIPaymentTransactionsContext))]
-    [Migration("20230727193610_initial")]
-    partial class initial
+    [Migration("20230727222128_ProceduresPayer")]
+    partial class ProceduresPayer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -126,6 +126,10 @@ namespace API.PaymentTransactions.Data.Migrations
 
                     b.Property<int>("documentType")
                         .HasColumnType("int");
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("name")
                         .IsRequired()

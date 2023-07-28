@@ -39,6 +39,9 @@ namespace API.PaymentTransactions.Data.Migrations
                     b.Property<int>("currency")
                         .HasColumnType("int");
 
+                    b.Property<bool>("paid")
+                        .HasColumnType("bit");
+
                     b.Property<long>("payerId")
                         .HasColumnType("bigint");
 
@@ -97,6 +100,12 @@ namespace API.PaymentTransactions.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("MountId"), 1L, 1);
 
+                    b.Property<long>("countId")
+                        .HasColumnType("bigint");
+
+                    b.Property<double>("factor")
+                        .HasColumnType("float");
+
                     b.Property<int>("fromCurrency")
                         .HasColumnType("int");
 
@@ -124,6 +133,10 @@ namespace API.PaymentTransactions.Data.Migrations
 
                     b.Property<int>("documentType")
                         .HasColumnType("int");
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("name")
                         .IsRequired()
