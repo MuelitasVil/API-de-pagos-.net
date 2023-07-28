@@ -23,12 +23,14 @@ CREATE PROCEDURE dbo.InsertCount
 
 -- Prueba de procedimiento almacenado 
 -- Select * from Payers;
--- Select * from Counts;
--- EXEC InsertCount
-	 -- @currency = 0,
-     -- @Total = 100,
-     -- @allowPartial = 0,
-     -- @suscribe = 0,
-     -- @PayerId = 1,
-     -- @Resultado = 0 
 
+Select * from Counts;
+EXEC InsertCount
+	 @currency = 0,
+     @Total = 100,
+     @allowPartial = 0,
+     @suscribe = 0,
+     @PayerId = 1,
+     @Resultado = 0 
+
+-- use PaymentDatabase;
