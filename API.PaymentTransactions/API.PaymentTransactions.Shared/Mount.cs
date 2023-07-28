@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using static API.PaymentTransactions.Shared.Enums;
 
 namespace API.PaymentTransactions.Shared
@@ -41,9 +38,9 @@ namespace API.PaymentTransactions.Shared
             }
 
 
-        public double factor;
+        public double factor { get; set; }
 
-        public long countId; 
+        public long countId { get; set; }
 
 
 

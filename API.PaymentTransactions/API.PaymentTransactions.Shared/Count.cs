@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static API.PaymentTransactions.Shared.Enums;
+﻿using static API.PaymentTransactions.Shared.Enums;
 
 namespace API.PaymentTransactions.Shared
 {
@@ -15,6 +10,7 @@ namespace API.PaymentTransactions.Shared
         public bool allowPartial { get; set; }
         public bool suscribe { get; set; }
         public long payerId { get; set; }
+        public bool paid { get; set; }
         
     }
 }
