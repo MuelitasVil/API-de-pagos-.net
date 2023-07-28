@@ -9,7 +9,7 @@ namespace API.PaymentTransactions.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(
-			@"CREATE PROCEDURE dbo.InsertPayment
+            @"CREATE PROCEDURE dbo.InsertPayment
 		
 			-- Variables para crear el monto : 
 			@toTotal bigint,
@@ -40,15 +40,12 @@ namespace API.PaymentTransactions.Data.Migrations
 			@payerId bigInt,
 			@fieldsId bigint,
 			@paymentId bigint
-
 			-- variables del Request : 
-
 			AS
 			BEGIN 
-
 			-- Insercion y creacion del monto a pagar : 
 
-			SELECT @ExistCount = count(*), @toTotal = Total, @toCurrency = currency, @allowPartial = allowPartial
+			SELECT @ExistCount = COUNT(*), @toTotal = MAX(Total), @toCurrency = MAX(currency)
 			FROM Counts 
 			WHERE countId = @countId;
 			
@@ -58,10 +55,12 @@ namespace API.PaymentTransactions.Data.Migrations
 				RETURN;
 			END
 
-			INSERT INTO Mounts(toTotal, toCurrency, fromCurrency, fromCurrency, countId)
-            VALUES(@toTotal, @toCurrency, @fromCurrency, @fromCurrency, @countId);
+			INSERT INTO Mounts(toTotal, toCurrency, fromTotal, fromCurrency, countId)
+            VALUES(@toTotal, @toCurrency, @fromTotal, @fromCurrency, @countId);
 
 			-- Creacion de status 
+
+			select @allowPartial = allowPartial from Counts where countId = @countId;
 
 			IF @allowPartial = 0 AND @toTotal !=  @fromTotal * @factor
 			BEGIN
@@ -75,12 +74,13 @@ namespace API.PaymentTransactions.Data.Migrations
 
 			-- Modificar count si ya esta pago :
 
-			SELECT @SumOfPayments = sum(fromTotal * factor) from Mounts where countId = @countId; 
+			SELECT @SumOfPayments = sum(fromTotal * factor) from Mounts where MountId = @mountId; 
 
 			IF @SumOfPayments >= @fromTotal
 			BEGIN
 				UPDATE Counts
 				SET paid = 1
+
 				WHERE countId = 1 
 			END
 			
@@ -125,9 +125,11 @@ namespace API.PaymentTransactions.Data.Migrations
 			
 			INSERT INTO Receipts(franchise, reference, issuerName, [authorization], paymentMethod, payerId, fieldsId, paymentId)
 				Values(@franchise, @reference, @issuerName, @authorization, @paymentMethod, @payerId, @fieldsId, @paymentId);
+		END
 
-		END");
-        }
+	");
+
+ }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {

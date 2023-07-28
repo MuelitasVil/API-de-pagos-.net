@@ -81,6 +81,7 @@ namespace API.PaymentTransactions.Data.Migrations
                     PayerId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     documentType = table.Column<int>(type: "int", nullable: false),
+                    email = table.Column<string>(type: "nvarchar(max)", nullable : false),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     number = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },

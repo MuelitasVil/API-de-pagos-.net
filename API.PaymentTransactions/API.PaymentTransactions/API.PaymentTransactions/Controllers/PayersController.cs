@@ -20,7 +20,7 @@ namespace API.PaymentTransactions.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> Post(Payer payer) 
+        public async Task<ActionResult<String>> Post(Payer payer) 
         { 
             var name = new SqlParameter("@name", SqlDbType.VarChar);
             name.Direction = ParameterDirection.Output;
