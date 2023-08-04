@@ -1,7 +1,7 @@
 -- Insercion de procedimiento para ingresar una cuenta asociada a un usuario
 
 use PaymentDatabase;
-
+GO
 CREATE PROCEDURE dbo.InsertCount
         @currency int, -- Ingresa la visa en la que se va a pagar
         @Total bigint, -- Cuanto es el total que se va a pagar
@@ -20,17 +20,12 @@ CREATE PROCEDURE dbo.InsertCount
             END
 		SELECT @Resultado = SCOPE_IDENTITY()
 		END
+GO
+
+	select * from Counts;
 
 -- Prueba de procedimiento almacenado 
 -- Select * from Payers;
 
-Select * from Counts;
-EXEC InsertCount
-	 @currency = 0,
-     @Total = 100,
-     @allowPartial = 0,
-     @suscribe = 0,
-     @PayerId = 1,
-     @Resultado = 0 
-
+-- Select * from Counts;
 -- use PaymentDatabase;

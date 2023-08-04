@@ -1,6 +1,6 @@
 
 -- Insertar Payer a la base de datos : 
-
+GO
 CREATE PROCEDURE dbo.InsertPayer
                 @documentType int,
                 @name varchar(max) OUTPUT,
@@ -14,4 +14,4 @@ CREATE PROCEDURE dbo.InsertPayer
                 
                 SELECT @name = SCOPE_IDENTITY()
                 END
-				
+GO		

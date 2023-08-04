@@ -62,7 +62,7 @@ namespace API.PaymentTransactions.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("fieldId"), 1L, 1);
 
                     b.Property<long>("Value")
-                        .HasColumnType("bigint");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("displayON")
                         .HasColumnType("bit");

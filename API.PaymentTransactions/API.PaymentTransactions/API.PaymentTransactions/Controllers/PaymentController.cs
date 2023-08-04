@@ -1,9 +1,10 @@
 ﻿using API.PaymentTransactions.Data;
 using API.PaymentTransactions.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
+using static API.PaymentTransactions.Shared.Enums;
 
 namespace API.PaymentTransactions.API.Controllers
 {
@@ -18,47 +19,122 @@ namespace API.PaymentTransactions.API.Controllers
             this.context = context;
         }
 
-        /*
+
         [HttpPost]
-        public IActionResult InsertPayment(Payment paymentData)
+        public async Task<ActionResult<String>> Post(DataPayment paymentData)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
-            {
-                using (SqlCommand command = new SqlCommand("InsertPayment", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-
-                    command.Parameters.AddWithValue("@toTotal", paymentData.ToTotal);
-                    command.Parameters.AddWithValue("@toCurrency", paymentData.ToCurrency);
-                    command.Parameters.AddWithValue("@fromTotal", paymentData.FromTotal);
-                    command.Parameters.AddWithValue("@fromCurrency", paymentData.FromCurrency);
-                    command.Parameters.AddWithValue("@factor", paymentData.Factor);
-                    command.Parameters.AddWithValue("@countId", paymentData.CountId);
-
-                    SqlParameter existCountParameter = new SqlParameter("@ExistCount", SqlDbType.Int)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-                    command.Parameters.Add(existCountParameter);
-                    connection.Open();
-                    command.ExecuteNonQuery();
-
-                    int existCount = (int)existCountParameter.Value;
-
-                    if (existCount <= 0)
-                    {
-                        return BadRequest("No se pudo insertar el pago debido a que ExistCount es menor o igual a 0.");
-                    }
-
-                    return Ok("El pago se insertó correctamente.");
-                }
-            }
+            Console.WriteLine("hOLALLALLALALAL");
+            return Ok("ve");
         }
     }
-    */
-
-
-
-
 }
+
+
+/*
+{
+  "payment": {
+    "description": "string"
+  },
+  "mount": {
+    "fromTotal": 100,
+    "fromCurrency": 0,
+    "factor": 1
+  },
+  "receipt": {
+    "receiptId": 0,
+    "franchise": 0,
+    "reference": "string",
+    "issuerName": 0,
+    "authorization": 0,
+    "paymentMethod": 0,
+    "payerId": 5
+  }
 }
+*/
+
+
+
+/*
+            Payment payment = paymentData.payment;
+            Mount mount = paymentData.mount;
+            Receipt receipt = paymentData.receipt;
+            
+            SqlParameter fromTotalParam = new SqlParameter("@fromTotal", SqlDbType.BigInt);
+            fromTotalParam.Value = mount.fromTotal;
+
+            SqlParameter fromCurrencyParam = new SqlParameter("@fromCurrency", SqlDbType.Int);
+            fromCurrencyParam.Value = mount.fromCurrency;
+
+            SqlParameter countIdParam = new SqlParameter("@countId", SqlDbType.BigInt);
+            countIdParam.Value = mount.countId;
+
+            SqlParameter factorParam = new SqlParameter("@factor", SqlDbType.Int);
+            
+            
+            switch (mount.fromCurrency)
+            {
+                case currencys.COP:
+                    factorParam.Value = 1;
+                    break;
+
+                case currencys.USD:
+                    factorParam.Value = 3949.19;
+                    break;
+
+                case currencys.EUR:
+                    factorParam.Value = 4378.87;
+                    break;
+
+            }
+
+            SqlParameter descriptionParam = new SqlParameter("@description", SqlDbType.NVarChar);
+            descriptionParam.Value = payment.description;
+
+            SqlParameter franchiseParam = new SqlParameter("@franchise", SqlDbType.Int);
+            franchiseParam.Value = receipt.franchise;
+
+            SqlParameter referenceParam = new SqlParameter("@reference", SqlDbType.NVarChar);
+            referenceParam.Value = receipt.reference;
+
+            SqlParameter issuerNameParam = new SqlParameter("@issuerName", SqlDbType.Int);
+            issuerNameParam.Value = receipt.issuerName;
+
+            SqlParameter authorizationParam = new SqlParameter("@authorization", SqlDbType.Int);
+            authorizationParam.Value = receipt.authorization;
+
+            SqlParameter paymentMethodParam = new SqlParameter("@paymentMethod", SqlDbType.Int);
+            paymentMethodParam.Value = receipt.paymentMethod;
+
+            SqlParameter payerIdParam = new SqlParameter("@payerId", SqlDbType.BigInt);
+            payerIdParam.Value = receipt.payerId;
+            */
+
+/*
+String sqlCommand = 
+    @"EXEC InsertPayment
+    @fromTotal,
+    @fromCurrency,
+    @countId,
+    @factor,
+    @description,
+    @franchise,
+    @reference,
+    @issuerName,
+    @authorization,
+    @paymentMethod,
+    @payerId";
+
+await context.Database.ExecuteSqlRawAsync(
+    sqlCommand,
+    fromTotalParam,
+    fromCurrencyParam,
+    countIdParam,
+    factorParam,
+    descriptionParam,
+    franchiseParam,
+    referenceParam,
+    issuerNameParam,
+    authorizationParam,
+    paymentMethodParam,
+    payerIdParam);
+*/
