@@ -1,4 +1,5 @@
-﻿using API.PaymentTransactions.Data;
+﻿using API.PaymentTransactions.API.Controllers.ModelsOfControllers;
+using API.PaymentTransactions.Data;
 using API.PaymentTransactions.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -21,57 +22,22 @@ namespace API.PaymentTransactions.API.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<String>> Post(DataPayment paymentData)
+        public async Task<ActionResult<String>> Post(PostPayment paymentData)
         {
-            Console.WriteLine("hOLALLALLALALAL");
-            return Ok("ve");
-        }
-    }
-}
 
-
-/*
-{
-  "payment": {
-    "description": "string"
-  },
-  "mount": {
-    "fromTotal": 100,
-    "fromCurrency": 0,
-    "factor": 1
-  },
-  "receipt": {
-    "receiptId": 0,
-    "franchise": 0,
-    "reference": "string",
-    "issuerName": 0,
-    "authorization": 0,
-    "paymentMethod": 0,
-    "payerId": 5
-  }
-}
-*/
-
-
-
-/*
-            Payment payment = paymentData.payment;
-            Mount mount = paymentData.mount;
-            Receipt receipt = paymentData.receipt;
-            
             SqlParameter fromTotalParam = new SqlParameter("@fromTotal", SqlDbType.BigInt);
-            fromTotalParam.Value = mount.fromTotal;
+            fromTotalParam.Value = paymentData.mountFromTotal;
 
             SqlParameter fromCurrencyParam = new SqlParameter("@fromCurrency", SqlDbType.Int);
-            fromCurrencyParam.Value = mount.fromCurrency;
+            fromCurrencyParam.Value = paymentData.mountfromCurrency;
 
             SqlParameter countIdParam = new SqlParameter("@countId", SqlDbType.BigInt);
-            countIdParam.Value = mount.countId;
+            countIdParam.Value = paymentData.mountCountId;
 
             SqlParameter factorParam = new SqlParameter("@factor", SqlDbType.Int);
-            
-            
-            switch (mount.fromCurrency)
+
+
+            switch (paymentData.mountfromCurrency)
             {
                 case currencys.COP:
                     factorParam.Value = 1;
@@ -87,54 +53,78 @@ namespace API.PaymentTransactions.API.Controllers
 
             }
 
+
             SqlParameter descriptionParam = new SqlParameter("@description", SqlDbType.NVarChar);
-            descriptionParam.Value = payment.description;
+            descriptionParam.Size = 20;
+            descriptionParam.Value = paymentData.paymentDescription;
 
             SqlParameter franchiseParam = new SqlParameter("@franchise", SqlDbType.Int);
-            franchiseParam.Value = receipt.franchise;
+            franchiseParam.Size = 20;
+            franchiseParam.Value = paymentData.receiptFranchise;
 
-            SqlParameter referenceParam = new SqlParameter("@reference", SqlDbType.NVarChar);
-            referenceParam.Value = receipt.reference;
+            SqlParameter referenceParam = new SqlParameter("@reference", SqlDbType.NVarChar, paymentData.receiptReference.Length);
+            referenceParam.Value = paymentData.receiptReference;
 
             SqlParameter issuerNameParam = new SqlParameter("@issuerName", SqlDbType.Int);
-            issuerNameParam.Value = receipt.issuerName;
+            issuerNameParam.Value = paymentData.mountfromCurrency;
 
             SqlParameter authorizationParam = new SqlParameter("@authorization", SqlDbType.Int);
-            authorizationParam.Value = receipt.authorization;
+            authorizationParam.Value = paymentData.receiptAuthorization;
 
             SqlParameter paymentMethodParam = new SqlParameter("@paymentMethod", SqlDbType.Int);
-            paymentMethodParam.Value = receipt.paymentMethod;
+            paymentMethodParam.Value = paymentData.receiptPaymentMethod;
 
             SqlParameter payerIdParam = new SqlParameter("@payerId", SqlDbType.BigInt);
-            payerIdParam.Value = receipt.payerId;
-            */
+            payerIdParam.Value = paymentData.receiptPayerId;
+
+            String sqlCommand =
+                @"EXEC InsertPayment
+                @fromTotal,
+                @fromCurrency,
+                @countId,
+                @factor,
+                @description,
+                @franchise,
+                @reference,
+                @issuerName,
+                @authorization,
+                @paymentMethod,
+                @payerId";
+
+            await context.Database.ExecuteSqlRawAsync(
+                sqlCommand,
+                fromTotalParam,
+                fromCurrencyParam,
+                countIdParam,
+                factorParam,
+                descriptionParam,
+                franchiseParam,
+                referenceParam,
+                issuerNameParam,
+                authorizationParam,
+                paymentMethodParam,
+                payerIdParam);
+
+            return Ok("ve");
+        }
+    }
+}
+
 
 /*
-String sqlCommand = 
-    @"EXEC InsertPayment
-    @fromTotal,
-    @fromCurrency,
-    @countId,
-    @factor,
-    @description,
-    @franchise,
-    @reference,
-    @issuerName,
-    @authorization,
-    @paymentMethod,
-    @payerId";
+{
+  "paymentDescription": "Generar Pago de algo",
+  "mountFromTotal": 100,
+  "mountfromCurrency": 0,
+  "mountCountId": 1,
+  "mountFactor": 0,
+  "receiptReference": "ASD",
+  "receiptFranchise": 0,
+  "receiptAuthorization": 123,
+  "receiptIssuername": 0,
+  "receiptPaymentMethod": 0,
+  "receiptPayerId": 1
+}
 
-await context.Database.ExecuteSqlRawAsync(
-    sqlCommand,
-    fromTotalParam,
-    fromCurrencyParam,
-    countIdParam,
-    factorParam,
-    descriptionParam,
-    franchiseParam,
-    referenceParam,
-    issuerNameParam,
-    authorizationParam,
-    paymentMethodParam,
-    payerIdParam);
 */
+

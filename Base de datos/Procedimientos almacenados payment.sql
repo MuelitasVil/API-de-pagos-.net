@@ -15,11 +15,11 @@ CREATE PROCEDURE dbo.InsertPayment
 		@factor int,
 
 		-- Variables de pago : 
-		@description nvarchar,
+		@description nvarchar(max),
 
 		-- variables del recibo : 
 		@franchise int,
-		@reference nvarchar,
+		@reference nvarchar(max),
 		@issuerName int, 
 		@authorization bigint, 
 		@paymentMethod int,
@@ -142,6 +142,7 @@ GO
 
 Use PaymentDatabase;
 
+/*
 -- Ejemplo:
 
 SELECT * FROM Counts;
@@ -159,7 +160,9 @@ EXEC InsertPayment
 		@authorization = 12345, 
 		@paymentMethod = 0,
 		@payerId = 5;
+*/
 
+/*
 Select * from Counts;
 Select * from statuses;
 select * from Mounts; 
@@ -172,3 +175,4 @@ Use PaymentDatabase;
 Select * 
 from Payers INNER JOIN Counts 
 ON Counts.payerId = Payers.PayerId;
+*/
