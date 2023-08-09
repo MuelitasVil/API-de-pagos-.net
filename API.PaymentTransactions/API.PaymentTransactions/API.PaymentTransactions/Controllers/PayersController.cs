@@ -20,20 +20,37 @@ namespace API.PaymentTransactions.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<String>> Post(Payer payer) 
-        { 
-            var name = new SqlParameter("@name", SqlDbType.VarChar);
-            name.Direction = ParameterDirection.Output;
+        public async Task<ActionResult<String>> Post(Payer payer)
+        {
 
-            await context.Database.ExecuteSqlInterpolatedAsync(
-                           $@"EXEC InsertPayer
-                           @documentType = {payer.documentType},
-                           @name = {payer.name} OUTPUT,
-                           @email = {payer.email},
-                           @number = {payer.number} ");
+            SqlParameter documentTypeParam = new SqlParameter("@documentType", SqlDbType.Int);
+            documentTypeParam.Value = payer.documentType;
 
-            var id = (string)name.Value;
-            return Ok(id);  
+            SqlParameter nameParam = new SqlParameter("@name", SqlDbType.VarChar, 100); 
+            nameParam.Value = payer.name;
+
+            SqlParameter emailParam = new SqlParameter("@email", SqlDbType.VarChar);
+            emailParam.Value = payer.email;
+
+            SqlParameter numberParam = new SqlParameter("@number", SqlDbType.VarChar);
+            numberParam.Value = payer.number;
+
+            String sqlCommand = 
+                @"EXEC InsertPayer
+                @documentType,
+                @name OUTPUT,
+                @email,
+                @number"; 
+
+            await context.Database.ExecuteSqlRawAsync(
+                sqlCommand,
+                documentTypeParam,
+                nameParam,
+                emailParam,
+                numberParam
+            );
+
+            return Ok($"Se ha creado un nuevo usuario -> {payer.name}");
 
         }
         

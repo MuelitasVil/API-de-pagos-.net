@@ -35,7 +35,7 @@ namespace API.PaymentTransactions.Data.Migrations
                     fieldId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     keyWord = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Value = table.Column<long>(type: "bigint", nullable: false),
+                    Value = table.Column<long>(type: "nvarchar(max)", nullable: false),
                     displayON = table.Column<bool>(type: "bit", nullable: false),
                     fieldsId = table.Column<long>(type: "bigint", nullable: false)
                 },

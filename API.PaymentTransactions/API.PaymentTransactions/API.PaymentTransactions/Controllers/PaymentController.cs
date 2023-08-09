@@ -1,9 +1,11 @@
-﻿using API.PaymentTransactions.Data;
+﻿using API.PaymentTransactions.API.Controllers.ModelsOfControllers;
+using API.PaymentTransactions.Data;
 using API.PaymentTransactions.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
+using static API.PaymentTransactions.Shared.Enums;
 
 namespace API.PaymentTransactions.API.Controllers
 {
@@ -18,47 +20,111 @@ namespace API.PaymentTransactions.API.Controllers
             this.context = context;
         }
 
-        /*
+
         [HttpPost]
-        public IActionResult InsertPayment(Payment paymentData)
+        public async Task<ActionResult<String>> Post(PostPayment paymentData)
         {
-            using (SqlConnection connection = new SqlConnection(_connectionString))
+
+            SqlParameter fromTotalParam = new SqlParameter("@fromTotal", SqlDbType.BigInt);
+            fromTotalParam.Value = paymentData.mountFromTotal;
+
+            SqlParameter fromCurrencyParam = new SqlParameter("@fromCurrency", SqlDbType.Int);
+            fromCurrencyParam.Value = paymentData.mountfromCurrency;
+
+            SqlParameter countIdParam = new SqlParameter("@countId", SqlDbType.BigInt);
+            countIdParam.Value = paymentData.mountCountId;
+
+            SqlParameter factorParam = new SqlParameter("@factor", SqlDbType.Int);
+
+
+            switch (paymentData.mountfromCurrency)
             {
-                using (SqlCommand command = new SqlCommand("InsertPayment", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
+                case currencys.COP:
+                    factorParam.Value = 1;
+                    break;
 
-                    command.Parameters.AddWithValue("@toTotal", paymentData.ToTotal);
-                    command.Parameters.AddWithValue("@toCurrency", paymentData.ToCurrency);
-                    command.Parameters.AddWithValue("@fromTotal", paymentData.FromTotal);
-                    command.Parameters.AddWithValue("@fromCurrency", paymentData.FromCurrency);
-                    command.Parameters.AddWithValue("@factor", paymentData.Factor);
-                    command.Parameters.AddWithValue("@countId", paymentData.CountId);
+                case currencys.USD:
+                    factorParam.Value = 3949.19;
+                    break;
 
-                    SqlParameter existCountParameter = new SqlParameter("@ExistCount", SqlDbType.Int)
-                    {
-                        Direction = ParameterDirection.Output
-                    };
-                    command.Parameters.Add(existCountParameter);
-                    connection.Open();
-                    command.ExecuteNonQuery();
+                case currencys.EUR:
+                    factorParam.Value = 4378.87;
+                    break;
 
-                    int existCount = (int)existCountParameter.Value;
-
-                    if (existCount <= 0)
-                    {
-                        return BadRequest("No se pudo insertar el pago debido a que ExistCount es menor o igual a 0.");
-                    }
-
-                    return Ok("El pago se insertó correctamente.");
-                }
             }
+
+
+            SqlParameter descriptionParam = new SqlParameter("@description", SqlDbType.NVarChar);
+            descriptionParam.Size = 20;
+            descriptionParam.Value = paymentData.paymentDescription;
+
+            SqlParameter franchiseParam = new SqlParameter("@franchise", SqlDbType.Int);
+            franchiseParam.Size = 20;
+            franchiseParam.Value = paymentData.receiptFranchise;
+
+            SqlParameter referenceParam = new SqlParameter("@reference", SqlDbType.NVarChar, paymentData.receiptReference.Length);
+            referenceParam.Value = paymentData.receiptReference;
+
+            SqlParameter issuerNameParam = new SqlParameter("@issuerName", SqlDbType.Int);
+            issuerNameParam.Value = paymentData.mountfromCurrency;
+
+            SqlParameter authorizationParam = new SqlParameter("@authorization", SqlDbType.Int);
+            authorizationParam.Value = paymentData.receiptAuthorization;
+
+            SqlParameter paymentMethodParam = new SqlParameter("@paymentMethod", SqlDbType.Int);
+            paymentMethodParam.Value = paymentData.receiptPaymentMethod;
+
+            SqlParameter payerIdParam = new SqlParameter("@payerId", SqlDbType.BigInt);
+            payerIdParam.Value = paymentData.receiptPayerId;
+
+            String sqlCommand =
+                @"EXEC InsertPayment
+                @fromTotal,
+                @fromCurrency,
+                @countId,
+                @factor,
+                @description,
+                @franchise,
+                @reference,
+                @issuerName,
+                @authorization,
+                @paymentMethod,
+                @payerId";
+
+            await context.Database.ExecuteSqlRawAsync(
+                sqlCommand,
+                fromTotalParam,
+                fromCurrencyParam,
+                countIdParam,
+                factorParam,
+                descriptionParam,
+                franchiseParam,
+                referenceParam,
+                issuerNameParam,
+                authorizationParam,
+                paymentMethodParam,
+                payerIdParam);
+
+            return Ok("ve");
         }
     }
-    */
-
-
-
-
 }
+
+
+/*
+{
+  "paymentDescription": "Generar Pago de algo",
+  "mountFromTotal": 100,
+  "mountfromCurrency": 0,
+  "mountCountId": 1,
+  "mountFactor": 0,
+  "receiptReference": "ASD",
+  "receiptFranchise": 0,
+  "receiptAuthorization": 123,
+  "receiptIssuername": 0,
+  "receiptPaymentMethod": 0,
+  "receiptPayerId": 1
 }
+
+*/
+

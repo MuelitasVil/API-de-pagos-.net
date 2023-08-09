@@ -22,20 +22,44 @@ namespace API.PaymentTransactions.API.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post(Count count)
         {
-            var result = new SqlParameter("@Resultado", SqlDbType.Int);
-            result.Direction = ParameterDirection.Output;
+            SqlParameter currencyParam = new SqlParameter("@currency", SqlDbType.Int);
+            currencyParam.Value = count.currency;
 
-            await context.Database.ExecuteSqlInterpolatedAsync(
-                 $@"EXEC InsertCount
-	             @currency = {count.currency},
-                 @Total = {count.Total},
-                 @allowPartial = {count.allowPartial},
-                 @suscribe = 0,
-                 @PayerId = {count.payerId},
-                 @Resultado = 0 ");
+            SqlParameter totalParam = new SqlParameter("@Total", SqlDbType.BigInt);
+            totalParam.Value = count.Total;
 
-            var res = (string)result.Value;
-            return Ok(res);
+            SqlParameter allowPartialParam = new SqlParameter("@allowPartial", SqlDbType.Bit);
+            allowPartialParam.Value = count.allowPartial;
+
+            SqlParameter suscribeParam = new SqlParameter("@suscribe", SqlDbType.Bit);
+            suscribeParam.Value = false; 
+
+            SqlParameter payerIdParam = new SqlParameter("@PayerId", SqlDbType.BigInt);
+            payerIdParam.Value = count.payerId;
+
+            SqlParameter resultadoParam = new SqlParameter("@Resultado", SqlDbType.Int);
+            resultadoParam.Direction = ParameterDirection.Output;
+
+            String sqlCommand = 
+                @"EXEC InsertCount
+                @currency,
+                @Total,
+                @allowPartial,
+                @suscribe,
+                @PayerId,
+                @Resultado OUTPUT";
+
+            await context.Database.ExecuteSqlRawAsync(
+                sqlCommand,
+                currencyParam,
+                totalParam,
+                allowPartialParam,
+                suscribeParam,
+                payerIdParam,
+                resultadoParam
+            );
+
+            return Ok($"Se ha creado una nueva cuenta al usuario -> : {count.payerId}");
 
         }
     }
