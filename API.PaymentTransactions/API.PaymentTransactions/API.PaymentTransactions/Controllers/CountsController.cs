@@ -62,5 +62,20 @@ namespace API.PaymentTransactions.API.Controllers
             return Ok($"Se ha creado una nueva cuenta al usuario -> : {count.payerId}");
 
         }
+
+        [HttpGet("{payerId:int}")]
+        public async Task<ActionResult<Payer>> Get(int payerId)
+        {
+
+            SqlParameter payerIdParam = new SqlParameter("@payerId", SqlDbType.BigInt);
+            payerIdParam.Value = payerId;
+
+            String sqlCommand = "Exec dbo.GetCountsByPayers @payerId";
+
+            IAsyncEnumerable<Count> ConsultCounts = context.Counts.FromSqlRaw(sqlCommand, payerIdParam).AsAsyncEnumerable();
+
+            return Ok(ConsultCounts);
+            return NotFound();
+        }
     }
 }

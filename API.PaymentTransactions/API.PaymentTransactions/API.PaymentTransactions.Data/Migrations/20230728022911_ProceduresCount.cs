@@ -30,11 +30,23 @@ namespace API.PaymentTransactions.Data.Migrations
                         END
 		            SELECT @Resultado = SCOPE_IDENTITY()
 		        END");
-        }
 
+            migrationBuilder.Sql(
+                @"  
+                    CREATE PROCEDURE dbo.GetCountsByPayers
+	                @payerId bigInt
+	                AS 
+	                BEGIN 
+		                SELECT * 
+		                FROM Counts
+		                WHERE payerId = @payerId;
+	                END");
+        }
+        
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql("DROP PROCEDURE dbo.insertcount");
+            migrationBuilder.Sql("DROP PROCEDURE dbo.GetCountsByPayers");
         }
     }
 }

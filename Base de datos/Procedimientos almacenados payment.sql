@@ -1,8 +1,9 @@
 
 
 Use PaymentDatabase;
-DROP PROCEDURE IF EXISTS InsertPayment;
 
+DROP PROCEDURE IF EXISTS InsertPayment;
+DROP PROCEDURE IF EXISTS getPayments;
 -- Tener en cuenta que este
 
 GO
@@ -23,7 +24,10 @@ CREATE PROCEDURE dbo.InsertPayment
 		@issuerName int, 
 		@authorization bigint, 
 		@paymentMethod int,
-		@payerId bigInt
+		@payerId bigInt,
+
+		-- Definir el OUTPUT del procedimiento almacenado 
+		@Resultado INT OUTPUT
 
 		-- variables del Request : 
         AS
@@ -42,31 +46,26 @@ CREATE PROCEDURE dbo.InsertPayment
 		Declare	@fieldsId bigint;
 		Declare @paymentId bigint;
 
-		-- Declare Output
-		Declare @Salida varchar;
-
         BEGIN 
 			-- Insercion y creacion del monto a pagar : 
 
 			SELECT @ExistCount = COUNT(*), @toTotal = MAX(Total), @toCurrency = MAX(currency)
 			FROM Counts 
 			WHERE countId = @countId;
-			
-			SELECT * FROM Counts WHERE countId = @countId;
 
 			IF @ExistCount <= 0 
 			BEGIN 
-				SET @Salida = 'La cuenta no existe'; 
-				PRINT @Salida;
-				SELECT @ExistCount = SCOPE_IDENTITY()
-				RETURN;
+				PRINT 'No existe la cuenta ...';
+				set @Resultado = 1;
+				Select @Resultado;
+				RETURN @Resultado;
 			END
 
 			-- Creacion de status 
 
 			select @allowPartial = allowPartial from Counts where countId = @countId;
 
-			IF @allowPartial = 0 AND @toTotal !=  (@fromTotal * @factor)
+			IF @allowPartial = 0 AND @toTotal != (@fromTotal * @factor)
 			BEGIN
 				INSERT INTO statuses([status], reason, [message], [Date])
 				VALUES(1, 'The payment have to be complete', 'try again', GETDATE());
@@ -110,7 +109,6 @@ CREATE PROCEDURE dbo.InsertPayment
 			select @fieldsId = MAX(FieldsId)
 			from ListOfFields;
 
-			select * from Payments;
 
 			INSERT INTO Fields(keyWord, [Value], displayOn, FieldsId) 
 				VALUES('merchantCode','890900841',0,@fieldsId);
@@ -139,19 +137,23 @@ CREATE PROCEDURE dbo.InsertPayment
 		END
 GO
 
-
-Use PaymentDatabase;
+GO 
+CREATE PROCEDURE dbo.getPayments
+	AS
+	BEGIN
+		SELECT * 
+		FROM Payments
+	END
+GO
 
 /*
--- Ejemplo:
 
-SELECT * FROM Counts;
-select * From Payers;
+Declare @Resultado INT;
 
 EXEC InsertPayment
-        @fromTotal = 100, 
-		@fromCurrency = 99,
-		@countId = 1, 
+        @fromTotal = 50, 
+		@fromCurrency = 1,
+		@countId = 2, 
 		@factor = 1, 
 		@description = 'Pago realizado ...',
 		@franchise = 0,
@@ -159,7 +161,11 @@ EXEC InsertPayment
 		@issuerName = 0, 
 		@authorization = 12345, 
 		@paymentMethod = 0,
-		@payerId = 5;
+		@payerId = 1,
+		@Resultado = 0;
+
+SELECT @Resultado;
+
 */
 
 /*
@@ -169,6 +175,7 @@ select * from Mounts;
 select * from Fields;
 select * from ListOfFields;
 select * from Payments;
+select * from Payers;
 
 Use PaymentDatabase;
 
@@ -176,3 +183,5 @@ Select *
 from Payers INNER JOIN Counts 
 ON Counts.payerId = Payers.PayerId;
 */
+
+
