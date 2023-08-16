@@ -7,17 +7,16 @@ namespace API.PaymentTransactions.Data
     {
         public APIPaymentTransactionsContext(DbContextOptions options) : base(options) { }
 
-        DbSet<Count> Counts { get; set; } 
-        DbSet<Field> Fields { get; set; }
-        DbSet<Fields> ListOfFields { get; set; }
-        DbSet<Mount> Mounts { get; set; }
-        DbSet<Payer> Payers { get; set; }
-        DbSet<Payment> Payments { get; set; }
-        DbSet<Receipt> Receipts { get; set; }
-        DbSet<RequesByCount> requesByCounts { get; set; }
-        DbSet<Status> statuses { get; set; }    
+        public DbSet<Count> Counts { get; set; }
+        public DbSet<Field> Fields { get; set; }
+        public DbSet<Fields> ListOfFields { get; set; }
+        public DbSet<Mount> Mounts { get; set; }
+        public DbSet<Payer> Payers { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Receipt> Receipts { get; set; }
+        public DbSet<RequesByCount> requesByCounts { get; set; }
+        public DbSet<Status> statuses { get; set; }    
         
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

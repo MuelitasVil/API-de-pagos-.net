@@ -1,6 +1,9 @@
--- Insercion de procedimiento para ingresar una cuenta asociada a un usuario
-
 use PaymentDatabase;
+
+DROP PROCEDURE IF EXISTS InsertCount;
+DROP PROCEDURE IF EXISTS GetCountsByPayers;
+DROP PROCEDURE IF EXISTS EditPayerById;
+
 GO
 CREATE PROCEDURE dbo.InsertCount
         @currency int, -- Ingresa la visa en la que se va a pagar
@@ -22,10 +25,53 @@ CREATE PROCEDURE dbo.InsertCount
 		END
 GO
 
-	select * from Counts;
+Go
+  CREATE PROCEDURE dbo.GetCountsByPayers
+	 @payerId bigInt
+	 AS 
+	 BEGIN 
+		SELECT * 
+		FROM Counts
+		WHERE payerId = @payerId;
+	END
+GO
 
--- Prueba de procedimiento almacenado 
--- Select * from Payers;
+GO 
+  CREATE PROCEDURE dbo.EditPayerById 
+	@payerId Bigint,
+	@email varchar(max),
+	@number varchar(max),
+	@name varchar(max),
+	@response int OUTPUT
+	AS 
+	BEGIN
+		
+		Print @payerId;
+		Select * from Payers Where PayerId = @payerId;
 
--- Select * from Counts;
--- use PaymentDatabase;
+		IF NOT EXISTS (SELECT * FROM Payers WHERE PayerId = @payerId)
+		BEGIN
+		PRINT 'USUARIO NO EXISTE';
+		SET @response = 1;
+		RETURN;
+		END
+
+		PRINT 'El usuario ha cambiado correctamente sus datos';
+		SET @response = 0;
+		Select @response, @payerId;
+		RETURN;
+
+		-- UPDATE Payers
+		-- SET email = @email, number = @number, [name] = @name
+		-- Where PayerId = @payerId 
+	END 
+GO
+
+Declare @A INT = 2; 
+Exec dbo.EditPayerById @payerId = 1, @email = 'newCorreo', @number = 'newNumber', @name = 'newName', @response = 0 OUTPUT;
+SELECT @response as Respuesta;
+
+SELECT * FROM Payers;
+-- Exec dbo.GetCountsByPayers @payerId = 1;
+
+(Select * FROM PAYERS WHERE EXISTS (SELECT * FROM Payers WHERE PayerId = 2));
