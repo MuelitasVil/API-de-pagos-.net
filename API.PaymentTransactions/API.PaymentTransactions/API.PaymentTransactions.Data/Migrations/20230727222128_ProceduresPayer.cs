@@ -46,32 +46,41 @@ namespace API.PaymentTransactions.Data.Migrations
                     FROM Payers
                 END");
 
-            migrationBuilder.Sql(
+            migrationBuilder.Sql
+                (
                 @"
-                CREATE PROCEDURE dbo.EditPayerById 
-	            @payerId Bigint,
-	            @email varchar(max),
-	            @number varchar(max),
-	            @name varchar(max),
-	            @response int OUTPUT
-	            AS 
-	                BEGIN
-		                IF NOT EXISTS (SELECT * FROM Payers WHERE PayerId = @payerId)
-		                BEGIN
-		                PRINT 'USUARIO NO EXISTE';
-		                SET @response = 1;
-		                RETURN;
-		                END
+                CREATE PROCEDURE dbo.InsertPayer
+                    @documentType int,
+                    @name varchar(max),
+                    @email varchar(max),
+                    @number varchar(max),
+				    @password varchar(max),
+				    @salt varchar(max),
+				    @result int OUTPUT
+                    AS
+                    BEGIN 
+				    IF EXISTS (SELECT * FROM Payers WHERE email = @email) 
+				    BEGIN 
+					    PRINT 'El correo ingresado ya existe ... ';
+					    set @result = 1;
+					    RETURN 
+				    END 
 
-		                UPDATE Payers
-		                SET email = @email, number = @number, [name] = @name
-		                Where PayerId = @payerId 
+				    IF EXISTS (SELECT * FROM Payers WHERE number = @number) 
+				    BEGIN 
+					    PRINT 'El numero ingresado ya existe ... ';
+					    set @result = 2;
+					    RETURN;
+				    END 
 
-		                PRINT 'El usuario ha cambiado correctamente sus datos';
-		                SET @response = 0;
-		                RETURN;
-
-	            END ");
+                    INSERT INTO Payers(documentType, name, email, number, password, salt)
+                    VALUES(@documentType, @name, @email, @number, @password, @salt)
+				
+				    PRINT 'El usuario ingresado ha sido registrado ...';
+				    SET @result = 0;
+				    RETURN;                    
+                    END "
+                );
 
         }
             

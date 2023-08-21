@@ -2,7 +2,6 @@ use PaymentDatabase;
 
 DROP PROCEDURE IF EXISTS InsertCount;
 DROP PROCEDURE IF EXISTS GetCountsByPayers;
-DROP PROCEDURE IF EXISTS EditPayerById;
 
 GO
 CREATE PROCEDURE dbo.InsertCount
@@ -36,42 +35,5 @@ Go
 	END
 GO
 
-GO 
-  CREATE PROCEDURE dbo.EditPayerById 
-	@payerId Bigint,
-	@email varchar(max),
-	@number varchar(max),
-	@name varchar(max),
-	@response int OUTPUT
-	AS 
-	BEGIN
-		
-		Print @payerId;
-		Select * from Payers Where PayerId = @payerId;
-
-		IF NOT EXISTS (SELECT * FROM Payers WHERE PayerId = @payerId)
-		BEGIN
-		PRINT 'USUARIO NO EXISTE';
-		SET @response = 1;
-		RETURN;
-		END
-
-		PRINT 'El usuario ha cambiado correctamente sus datos';
-		SET @response = 0;
-		Select @response, @payerId;
-		RETURN;
-
-		-- UPDATE Payers
-		-- SET email = @email, number = @number, [name] = @name
-		-- Where PayerId = @payerId 
-	END 
-GO
-
-Declare @A INT = 2; 
-Exec dbo.EditPayerById @payerId = 1, @email = 'newCorreo', @number = 'newNumber', @name = 'newName', @response = 0 OUTPUT;
-SELECT @response as Respuesta;
-
-SELECT * FROM Payers;
+-- SELECT * FROM Payers;
 -- Exec dbo.GetCountsByPayers @payerId = 1;
-
-(Select * FROM PAYERS WHERE EXISTS (SELECT * FROM Payers WHERE PayerId = 2));

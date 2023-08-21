@@ -1,11 +1,11 @@
-﻿using API.PaymentTransactions.Data;
+﻿using API.PaymentTransactions.API.Cryptography;
+using API.PaymentTransactions.Data;
 using API.PaymentTransactions.Shared;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Data;
+using System.Text;
 
 namespace API.PaymentTransactions.API.Controllers
 {
@@ -24,6 +24,8 @@ namespace API.PaymentTransactions.API.Controllers
         public async Task<ActionResult<String>> Post(Payer payer)
         {
 
+            Encrypt encrypt = new Encrypt();
+
             SqlParameter documentTypeParam = new SqlParameter("@documentType", SqlDbType.Int);
             documentTypeParam.Value = payer.documentType;
 
@@ -36,22 +38,51 @@ namespace API.PaymentTransactions.API.Controllers
             SqlParameter numberParam = new SqlParameter("@number", SqlDbType.VarChar);
             numberParam.Value = payer.number;
 
+            SqlParameter saltParam = new SqlParameter("@salt", SqlDbType.VarChar);
+            String salt = encrypt.getSalt(10);
+            payer.salt = salt;
+            saltParam.Value = salt;
+
+            SqlParameter passwordParam = new SqlParameter("@password", SqlDbType.VarChar);
+            String password = encrypt.GetSHA256(payer.password + salt);
+            payer.password = password;
+            passwordParam.Value = password;
+
+            SqlParameter resultParam = new SqlParameter("@result", SqlDbType.Int);
+            resultParam.Value = 0;
+            resultParam.Direction = ParameterDirection.Output;
+
             String sqlCommand =
                 @"EXEC InsertPayer
                 @documentType,
-                @name OUTPUT,
+                @name,
                 @email,
-                @number";
+                @number,
+                @password,
+                @salt,
+                @result OUTPUT";
 
             await context.Database.ExecuteSqlRawAsync(
                 sqlCommand,
                 documentTypeParam,
                 nameParam,
                 emailParam,
-                numberParam
+                numberParam,
+                saltParam,
+                passwordParam,
+                resultParam
             );
 
-            return Ok($"Se ha creado un nuevo usuario -> {payer.name}");
+
+            Console.Out.WriteLine(".............");
+            Console.Out.WriteLine(payer.salt);
+            Console.Out.WriteLine(payer.password);
+
+            int result = (int)resultParam.Value;
+            if (result == 0) return Ok(payer);
+            if (result == 1) return BadRequest("El correo ingresado ya existe");
+            if (result == 2) return BadRequest("El numero ingreado ya existe");
+            return BadRequest("nose xd");
 
         }
 
