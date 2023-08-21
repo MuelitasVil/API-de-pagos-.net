@@ -162,7 +162,7 @@ EXEC InsertPayment
 		@authorization = 12345, 
 		@paymentMethod = 0,
 		@payerId = 1,
-		@Resultado = 0;
+		@Resultado = 0 OUTPUT;
 
 SELECT @Resultado;
 

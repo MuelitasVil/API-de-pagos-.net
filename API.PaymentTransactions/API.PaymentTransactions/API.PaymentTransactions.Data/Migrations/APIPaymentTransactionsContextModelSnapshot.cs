@@ -62,7 +62,7 @@ namespace API.PaymentTransactions.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("fieldId"), 1L, 1);
 
                     b.Property<long>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("displayON")
                         .HasColumnType("bit");
@@ -143,6 +143,14 @@ namespace API.PaymentTransactions.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("number")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("salt")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

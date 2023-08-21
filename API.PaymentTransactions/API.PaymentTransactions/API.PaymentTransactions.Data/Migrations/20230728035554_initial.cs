@@ -83,7 +83,9 @@ namespace API.PaymentTransactions.Data.Migrations
                     documentType = table.Column<int>(type: "int", nullable: false),
                     email = table.Column<string>(type: "nvarchar(max)", nullable : false),
                     name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    number = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    number = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    salt = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

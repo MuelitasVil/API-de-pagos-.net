@@ -10,10 +10,7 @@ namespace API.PaymentTransactions.Shared
         public string email { get; set; }  
         public string name { get; set; }
         public string number { get; set; }
-
-        public static implicit operator Payer(int v)
-        {
-            throw new NotImplementedException();
-        }
+        public string password { get; set; }
+        public string salt { get; set; }
     }
 }
