@@ -93,7 +93,7 @@ GO
 	END 
 GO
 
-SELECT * FROM Payers;
+-- SELECT * FROM Payers;
 
 /*
 Declare @a int;
