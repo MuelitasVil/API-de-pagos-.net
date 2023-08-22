@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<APIPaymentTransactionsContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("APIPaymentTransactionsContext")));
+    options.UseSqlServer(builder.Configuration["ConnectionStrings:APIPaymentTransactionsContext"]));
 
 var app = builder.Build();
 
