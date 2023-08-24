@@ -83,7 +83,7 @@ namespace API.PaymentTransactions.API.Controllers
             if (result == 1) return BadRequest("El correo ingresado ya existe");
             if (result == 2) return BadRequest("El numero ingreado ya existe");
             return BadRequest("nose xd");
-
+      
         }
 
         [HttpGet("{id:int}")]

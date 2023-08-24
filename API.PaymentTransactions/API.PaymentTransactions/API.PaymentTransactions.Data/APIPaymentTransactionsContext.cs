@@ -1,9 +1,10 @@
 ﻿using API.PaymentTransactions.Shared;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.PaymentTransactions.Data
 {
-    public class APIPaymentTransactionsContext : DbContext
+    public class APIPaymentTransactionsContext : IdentityDbContext
     {
         public APIPaymentTransactionsContext(DbContextOptions options) : base(options) { }
 
