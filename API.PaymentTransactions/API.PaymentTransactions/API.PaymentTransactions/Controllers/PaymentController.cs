@@ -1,6 +1,7 @@
 ﻿using API.PaymentTransactions.API.Controllers.ModelsOfControllers;
 using API.PaymentTransactions.Data;
 using API.PaymentTransactions.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using static API.PaymentTransactions.Shared.Enums;
 
 namespace API.PaymentTransactions.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PaymentController : ControllerBase

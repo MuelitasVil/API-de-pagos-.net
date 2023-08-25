@@ -1,5 +1,6 @@
 ﻿using API.PaymentTransactions.Data;
 using API.PaymentTransactions.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using System.Data;
 
 namespace API.PaymentTransactions.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CountsController : ControllerBase
