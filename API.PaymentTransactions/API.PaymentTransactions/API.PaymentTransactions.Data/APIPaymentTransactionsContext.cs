@@ -17,7 +17,8 @@ namespace API.PaymentTransactions.Data
         public DbSet<Receipt> Receipts { get; set; }
         public DbSet<RequesByCount> requesByCounts { get; set; }
         public DbSet<Status> statuses { get; set; }    
-        
+        public DbSet<RefreshToken> RefreshTokens { get; set; }  
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
