@@ -3,5 +3,6 @@
     public class JWTConfig
     {
         public String secret { get; set; }  
+        public TimeSpan ExpiryTime { get; set; }
     }
 }
